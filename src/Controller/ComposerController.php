@@ -50,9 +50,14 @@ class ComposerController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $instrument = $this->entityManager->getRepository(Instrument::class)->find($data['instrumentId']);
+        $ComposerfullName = $this->entityManager->getRepository(Composer::class)->findOneBy(['fullName' => $data['fullName']]);
 
         if (!$instrument) {
             return new JsonResponse(['message' => 'Instrument not found'], 404);
+        }
+
+        if ($ComposerfullName) {
+            return new JsonResponse(['message' => 'Composer already existe'], 404);
         }
         
         $composer = new Composer();

@@ -34,9 +34,15 @@ class CategoryController extends AbstractController
     #[Route('/new', name: 'app_category_new', methods: ['POST'])]
     public function new(Request $request, CategoryRepository $categoryRepository, SerializerInterface $serializer): Response
     {
-        $data = $request->getContent();
-        $category = $serializer->deserialize($data, Category::class, 'json');
+        $data = json_decode($request->getContent(), true);
+        $categoryName = $this->entityManager->getRepository(Category::class)->findOneBy(['name' => $data['name']]);
 
+        if ($categoryName) {
+            return new JsonResponse(['message' => 'This category already exist'], 404);
+        }
+
+        $category = new Category();
+        $category->setName($data['name']);
         $this->entityManager->persist($category);
         $this->entityManager->flush();
 

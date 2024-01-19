@@ -228,6 +228,18 @@ class CourseController extends AbstractController
         $professor = $this->entityManager->getRepository(User::class)->find($data['professorId']);
         $category = $this->entityManager->getRepository(Category::class)->find($data['categoryId']);
         $composer = $this->entityManager->getRepository(Composer::class)->find($data['composerId']);
+        $composer = $this->entityManager->getRepository(Composer::class)->find($data['composerId']);
+
+        $videoId = $this->entityManager->getRepository(Course::class)->findOneBy(['linkVideo' => $data['linkVideo']]);
+        $titleCourse = $this->entityManager->getRepository(Course::class)->findOneBy(['title' => $data['title']]);
+
+        if ($videoId ) {
+            return new Response("Course already exist with this video ID", 404);
+        }
+
+        if ($titleCourse) {
+            return new Response("Course already exist with this title", 404);
+        }
 
         if (!$instrument) {
             return new Response("Instrument not found", 404);
@@ -238,7 +250,6 @@ class CourseController extends AbstractController
         if (!$category) {
             return new Response("Category not found", 404);
         }
-
         if (!$composer) {
             return new Response("Composer not found", 404);
         }  
@@ -283,7 +294,6 @@ class CourseController extends AbstractController
         if (!$category) {
             return new Response("Category not found", 404);
         }
-
         if (!$composer) {
             return new Response("Composer not found", 404);
         }  

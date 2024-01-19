@@ -52,6 +52,12 @@ class AuthController extends AbstractController
     public function new(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
+        $userEmail = $this->userRepository->findOneBy(['email' => $data['email']]);
+        
+        if( $userEmail ) {
+            return new JsonResponse(['message' => 'User already exist'], 404);
+        }
+
         $roles = $data['roles'] ?? '' ;
         $user = new User();
         $user->setFirstName($data['firstName']);

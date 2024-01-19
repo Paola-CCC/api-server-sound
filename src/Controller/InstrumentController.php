@@ -61,6 +61,11 @@ class InstrumentController extends AbstractController
     public function newInstrument(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
+        $instrumentName = $this->entityManager->getRepository(Instrument::class)->findOneBy(['name' => $data['name']]);
+
+        if ($instrumentName) {
+            return new JsonResponse(['message' => 'This instrument already exist'], 404);
+        }
 
         $instrument = new Instrument();
         $instrument->setName($data['name']);

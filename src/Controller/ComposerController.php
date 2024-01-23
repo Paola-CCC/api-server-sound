@@ -63,6 +63,7 @@ class ComposerController extends AbstractController
         $composer = new Composer();
         $composer->setFullName($data['fullName']);
         $composer->setBiography($data['biography']);
+        $composer->setPhoto($data['photo']);
         $composer->addInstrument($instrument);
 
         // Enregistrer le compositeur en base de données
@@ -123,12 +124,11 @@ class ComposerController extends AbstractController
             return new Response("Composer not found", 404);
         }  
 
-        $composer = new Composer();
         $composer->setFullName($data['fullName']);
         $composer->setBiography($data['biography']);
+        $composer->setPhoto($data['photo']);
         $composer->addInstrument($instrument);
 
-        // Enregistrer le compositeur en base de données
         $this->entityManager->persist($composer);
         $this->entityManager->flush();
 

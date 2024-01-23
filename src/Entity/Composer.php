@@ -37,6 +37,10 @@ class Composer
     #[Groups(['composer'])]
     private Collection $courses;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['composer', 'instruments_composers', 'course_composers'])]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->instrument = new ArrayCollection();
@@ -119,6 +123,18 @@ class Composer
         if ($this->courses->removeElement($course)) {
             $course->removeComposer($this);
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

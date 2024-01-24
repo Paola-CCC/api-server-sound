@@ -22,7 +22,7 @@ class Images
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['progression'])]
+    #[Groups(['progression','user'])]
     private ?string $imageName = null;
 
     #[Vich\UploadableField(mapping: 'image_upload', fileNameProperty: 'imageName')]

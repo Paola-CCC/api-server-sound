@@ -63,6 +63,7 @@ class AuthController extends AbstractController
         $user->setFirstName($data['firstName']);
         $user->setLastName($data['lastName']);
         $user->setUserName($data['firstName'] . ' ' . $data['lastName']);
+        $user->setBiography($data['biography'] ?? '');
         $user->setEmail($data['email']);
 
         if (str_contains($data['email'], '@saline') || $roles === 'ROLE_ADMIN' ) {

@@ -117,6 +117,8 @@ class UserController extends AbstractController
             $user->setFirstName($data['firstName']);
             $user->setLastName($data['lastName']);
             $user->setEmail($data['email']);
+            $user->setBiography($data['biography']);
+
             if($data['role'] != ""){
                 $role = $data['role'];
                 if ($role == 'admin') {

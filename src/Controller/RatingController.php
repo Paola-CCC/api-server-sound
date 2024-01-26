@@ -63,24 +63,23 @@ class RatingController extends AbstractController
 
         $courseId = $data['courseId'];
         $course = $this->entityManager->getRepository(Course::class)->find($courseId);
+        $user = $this->entityManager->getRepository(Course::class)->find($data['userId']);
+
+        
         if (!$course) {
             return new Response("Course not found", 404);
         }
-        $ratingValue = $data['valueRating'];
+
+        if (!$user) {
+            return new Response("User not found", 404);
+        }
+
         $rating = new Rating();
         $rating->setCourse($course);
-        $rating->setValue($ratingValue);
-        $rating->setUser($this->getUser());
+        $rating->setValue($data['valueRating']);
+        $rating->setUser($user);
         $this->entityManager->persist($rating);
         $this->entityManager->flush();
-
-        // $userId = $data['user']['id'];
-        // $user = $this->entityManager->getRepository(User::class)->find($userId);
-        // if (!$user) {
-        //     return new Response("User not found", 404);
-        // };
-        // $rating->setUser($user);
-  
 
         return new JsonResponse(['message' => 'Rating created successfully']);
 

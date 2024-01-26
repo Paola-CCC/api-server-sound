@@ -96,7 +96,7 @@ class Course
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: Rating::class, cascade: ["remove"])]
-    #[Groups(['course', 'progression' ])]
+    #[Groups(['course', 'progression', 'rating' ])]
     private Collection $ratings;
 
     #[ORM\OneToOne(mappedBy: 'course', cascade: ['remove'])]

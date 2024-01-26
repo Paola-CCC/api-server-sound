@@ -55,7 +55,7 @@ class ProgressionController extends AbstractController
                 'updateAt' =>  $this->formatter->format($progression->getUpdateAt()),
             ];
         }
-        $json = $this->serializer->serialize($data, 'json', ['groups' => [ 'course','course_professor', 'user','messages', 'progression' , 'course_composers' ], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        $json = $this->serializer->serialize($data, 'json', ['groups' => [ 'course', 'rating'  ,'course_professor', 'user','messages', 'progression' , 'course_composers' ], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
         return new JsonResponse($json, 200, [], true);
     }
 
@@ -78,7 +78,7 @@ class ProgressionController extends AbstractController
             ->getRepository(Progression::class)
             ->findByProgressionProf($data['professorId']);
 
-        $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages', 'progression' , 'course_composers'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','rating','course_professor', 'messages', 'progression' , 'course_composers'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
         return new JsonResponse($json, 200, [], true);
     }
 
@@ -107,7 +107,7 @@ class ProgressionController extends AbstractController
                 'user' => $studentsId
             ];
             
-            $json = $this->serializer->serialize($result, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+            $json = $this->serializer->serialize($result, 'json', ['groups' => [ 'course', 'rating', 'course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
             return new JsonResponse($json, 200, [], true);
         } else {
 
@@ -133,7 +133,7 @@ class ProgressionController extends AbstractController
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);
         }
      
-        $serializedCourses = $serializer->serialize($results, 'json', ['groups' => ['course', 'course_professor', 'course_category', 'category', 'course_composers' , 'course_composers' ,'course_instruments' , 'instrument']]);
+        $serializedCourses = $serializer->serialize($results, 'json', ['groups' => ['course','rating', 'course_professor', 'course_category', 'category', 'course_composers' , 'course_composers' ,'course_instruments' , 'instrument']]);
 
         return new JsonResponse($serializedCourses, 200, [], true);
     }
@@ -185,7 +185,7 @@ class ProgressionController extends AbstractController
                 'updateAt' =>  $progression->getUpdateAt()
             ];
         }
-        $json = $this->serializer->serialize($result, 'json', ['groups' => ['course','course_professor','user','course_comments',  'progression' , 'course_composers'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        $json = $this->serializer->serialize($result, 'json', ['groups' => ['course', 'rating','course_professor','user','course_comments',  'progression' , 'course_composers'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
         return new JsonResponse($json, 200, [], true);
     }
 

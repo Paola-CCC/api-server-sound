@@ -64,7 +64,6 @@ class RatingController extends AbstractController
         $courseId = $data['courseId'];
         $course = $this->entityManager->getRepository(Course::class)->find($courseId);
         $user = $this->entityManager->getRepository(User::class)->find($data['userId']);
-
         
         if (!$course) {
             return new Response("Course not found", 404);
@@ -72,6 +71,15 @@ class RatingController extends AbstractController
 
         if (!$user) {
             return new Response("User not found", 404);
+        }
+
+        $review = $this->entityManager->getRepository(User::class)->findby([
+            'user' =>  $data['userId'],
+            'course' => $data['courseId']
+        ]);
+
+        if ($review) {
+            return new Response("Attention! Cet utilisateur a déjà donné son avis sur ce cours", 404);
         }
 
         $rating = new Rating();

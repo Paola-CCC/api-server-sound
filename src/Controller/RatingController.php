@@ -63,7 +63,7 @@ class RatingController extends AbstractController
 
         $courseId = $data['courseId'];
         $course = $this->entityManager->getRepository(Course::class)->find($courseId);
-        $user = $this->entityManager->getRepository(Course::class)->find($data['userId']);
+        $user = $this->entityManager->getRepository(User::class)->find($data['userId']);
 
         
         if (!$course) {

@@ -133,7 +133,7 @@ class UserController extends AbstractController
             $instruments = $data['instruments'];
     
             foreach ($instruments as $instrumentName) {
-                $instrument = $this->entityManager->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]);
+                $instrument = $this->entityManager->getRepository(Instrument::class)->findOneBy(['id' => $instrumentName]);
                 if (!$instrument) {
                     return new JsonResponse(['message' => 'Instrument not found'], 404);
                 };

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use IntlDateFormatter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
@@ -57,9 +58,16 @@ class Review
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?string
     {
-        return $this->createdAt;
+        if ($this->createdAt instanceof \DateTimeImmutable) {
+            $locale = 'fr_FR';
+            $formatter = new IntlDateFormatter($locale, IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
+            $formatter->setPattern('dd/MM/yyyy HH:mm');
+            return $formatter->format($this->createdAt);
+        }   
+
+        return null;
     }
 
     public function setCreatedAt(?\DateTimeImmutable $createdAt): static

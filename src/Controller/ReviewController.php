@@ -30,7 +30,7 @@ class ReviewController extends AbstractController
     {
         $coursesList = $reviewRepository->findAll();
 
-        $serializedCourses = $serializer->serialize($coursesList, 'json', ['groups' => ['user','review']]);
+        $serializedCourses = $serializer->serialize($coursesList, 'json', ['groups' => ['user','review'],'datetime_format' => 'dd/MM/yyyy HH:mm']);
 
         return new JsonResponse($serializedCourses, 200, [], true);
     }

@@ -152,16 +152,16 @@ class CourseController extends AbstractController
     public function searchCourses (  Request $request, CourseRepository $courseRepository ,ManagerRegistry $doctrine,SerializerInterface $serializer): Response {
 
         $data = json_decode($request->getContent(),true);
-        $user = $data['professorId'] ?? '';
+        $userId = $data['professorId'] ?? '';
         $instrumentName = $data['instrumentName'] ?? '';
-        $category = $data['categoryId'] ?? '';
-        $composer = $data['composerId'] ?? '';
+        $categoryId = $data['categoryId'] ?? '';
+        $composerId = $data['composerId'] ?? '';
         $title = $data['title'] ?? '';
 
-        $user = $user !== '' ? $doctrine->getRepository(User::class)->find($user) : null;
+        $user = $userId !== '' ? $doctrine->getRepository(User::class)->find($userId) : null;
         $instrument = $instrumentName !== '' ? $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) : null;
-        $category = $category !== '' ? $doctrine->getRepository(Category::class)->find($category) : null;
-        $composer = $composer !== '' ? $doctrine->getRepository(Composer::class)->find($composer) : null;
+        $category = $categoryId !== '' ? $doctrine->getRepository(Category::class)->find($categoryId) : null;
+        $composer = $composerId !== '' ? $doctrine->getRepository(Composer::class)->find($composerId) : null;
 
         if (!$user) {
             return new JsonResponse(['message' => 'User not found'], 404);
@@ -180,7 +180,7 @@ class CourseController extends AbstractController
         }
 
         $results = $courseRepository->findByCriteria($user, $instrument, $category, $composer, $title);
-        
+
         if (!$results ) {
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);
         }

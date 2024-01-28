@@ -152,14 +152,12 @@ class CourseController extends AbstractController
     public function searchCourses (  Request $request, CourseRepository $courseRepository ,ManagerRegistry $doctrine,SerializerInterface $serializer): Response {
 
         $data = json_decode($request->getContent(),true);
-        $title = $data['title'];
+        $title = $data['title'] ?? null;
         $user = $doctrine->getRepository(User::class)->find($data['professorId']) ;
         $instrument = $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $data['instrumentName']]);
         $composer = $doctrine->getRepository(Composer::class)->find($data['composerId']);
 
-        // $results = $courseRepository->findByCriteria($user, $instrument, $composer, $title);
-
-        $results = $courseRepository->findAllCriteria();
+        $results = $courseRepository->findByCriteria($user, $instrument, $composer, $title);
 
         if (!$results ) {
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);

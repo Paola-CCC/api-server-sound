@@ -165,7 +165,7 @@ class CourseRepository extends ServiceEntityRepository
                 ->setParameter('composer', $composer);
         }
 
-        if ($title !== '') {
+        if ($title !== null) {
             $qb->andWhere('c.title LIKE :title')
                 ->setParameter('title', $title . '%');
         }
@@ -178,39 +178,6 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findAllCriteria(): array
-    {
-        return $this->createQueryBuilder('c')
-            // ->andWhere('c.title LIKE :title')
-            // ->setParameter('title', $title . '%')
-
-            ->leftJoin('c.professor', 'u')
-            ->andWhere('u = :user')
-            ->setParameter('user', 2)
-
-
-            // ->leftJoin('c.instrument', 'i')
-            // ->andWhere('i = :instrument')
-            // ->setParameter('instrument', $instrument)
-
-            // ->leftJoin('c.composers', 'compo')
-            // ->andWhere('compo = :composer')
-            // ->setParameter('composer', $composer)
-
-
-            ->leftJoin('c.instrument', 'i')
-            ->andWhere('i = :instrument')
-            ->setParameter('instrument', '')
-
-            ->leftJoin('c.composers', 'compo')
-            ->andWhere('compo = :composer')
-            ->setParameter('composer', '')
-
-            ->orderBy('c.id', 'DESC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 
 //    /**
 //     * @return Course[] Returns an array of Course objects

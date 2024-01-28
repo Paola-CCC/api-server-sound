@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Forum;
 use App\Entity\User;
 use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,15 +85,15 @@ class ForumController extends AbstractController
 
 
     #[Route('forums-subject/search', name: 'find_forums_criteria', methods: ['POST'])]
-    public function findBySubjectCriteria(ForumRepository $forumRepository , SerializerInterface $serializer ,Request $request): JsonResponse
+    public function findBySubjectCriteria(ForumRepository $forumRepository , SerializerInterface $serializer ,Request $request , CategoryRepository $categoryRepository): JsonResponse
     {
 
         $data = json_decode($request->getContent(),true);
-        $categoryId = !empty($data['categoryId']) ? $data['categoryId']: null;
+        $category = $categoryRepository->find($data['categoryId']);
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
-
-        // dd( '$categoryId : ' , $categoryId,  '$subjectName : ', $subjectName);
-        $forumList = $forumRepository->findForumByCriteria($categoryId ,$subjectName);
+        
+        dd( '$categoryId : ' , $category,  '$subjectName : ', $subjectName);
+        $forumList = $forumRepository->findForumByCriteria($category ,$subjectName);
 
         $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
     

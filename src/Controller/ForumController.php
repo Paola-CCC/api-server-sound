@@ -91,7 +91,7 @@ class ForumController extends AbstractController
         $categoryId = !empty($data['categoryId']) ? $data['categoryId']: null;
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
 
-        dd($data['categoryId'] ,$data['subjectName']);
+        // dd($data['categoryId'] ,$data['subjectName']);
 
         $forumList = $forumRepository->findByProgression($categoryId ,$subjectName);
 

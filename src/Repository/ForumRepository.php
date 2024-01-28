@@ -80,7 +80,7 @@ class ForumRepository extends ServiceEntityRepository
                 ->setParameter('categoryID', $categoryId);
         }
         
-        if ($subjectForum !== '' ) {
+        if ($subjectForum !== null ) {
             $qb ->andWhere('f.subject LIKE :subject')
                 ->setParameter('subject', $subjectForum . '%') ;
         }

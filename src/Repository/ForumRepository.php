@@ -70,7 +70,7 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findForumByCriteria( $subjectForum , $categoryId ): array
+    public function findByCriteria( $subjectForum , $categoryId ): array
     {
         $qb = $this->createQueryBuilder('f');
 
@@ -88,6 +88,7 @@ class ForumRepository extends ServiceEntityRepository
         $qb->orderBy('f.id', 'DESC');
 
         return $qb->getQuery()->getResult();
+    
     }
 
 //    /**

@@ -99,8 +99,8 @@ class ProgressionRepository extends ServiceEntityRepository
     
         if ($user !== null) {
             $qb->join('p.user', 'u')
-               ->andWhere('u.id = :user')
-               ->setParameter('user', $user);
+            ->andwhere('u = :user')
+            ->setParameter('user', $user);
         }
     
         if ($title !== null) {

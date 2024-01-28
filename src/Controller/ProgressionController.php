@@ -102,19 +102,22 @@ class ProgressionController extends AbstractController
 
         $result= [] ;
 
-        if(empty($allProgression)){
-            $result[] = [
-                'user' => $studentsId
-            ];
+        $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        return new JsonResponse($json, 200, [], true);
+
+        // if(empty($allProgression)){
+        //     $result[] = [
+        //         'user' => $studentsId
+        //     ];
             
-            $json = $this->serializer->serialize($result, 'json', ['groups' => [ 'course', 'rating', 'course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
-            return new JsonResponse($json, 200, [], true);
-        } else {
+        //     $json = $this->serializer->serialize($result, 'json', ['groups' => [ 'course', 'rating', 'course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        //     return new JsonResponse($json, 200, [], true);
+        // } else {
 
-            $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
-            return new JsonResponse($json, 200, [], true);
+        //     $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
+        //     return new JsonResponse($json, 200, [], true);
 
-        }
+        // }
     }
 
 
@@ -124,8 +127,8 @@ class ProgressionController extends AbstractController
 
         $data = json_decode($request->getContent(),true);
         $user = $doctrine->getRepository(User::class)->find($data['professorId']) ;
-        $title = $data['title'];
-        $status = $data['status'];
+        $title = !empty($data['title']) ? $data['title']: null;
+        $status = !empty($data['status']) ? $data['status'] : null;
 
         $results = $progressionRepository->findByCriteria($user ,$title ,$status );
 

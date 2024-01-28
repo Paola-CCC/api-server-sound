@@ -109,7 +109,7 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria( ?User $user , ?Instrument $instrument , ?Category $category, ?Composer $composer , string $title = '' ): array 
+    public function findByCriteria( ?User $user , ?Instrument $instrument , ?Composer $composer , string $title = '' ): array 
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -123,12 +123,6 @@ class CourseRepository extends ServiceEntityRepository
             $qb->join('c.instrument', 'i')
                 ->andwhere('i = :instrument')
                 ->setParameter('instrument', $instrument);
-        }
-
-        if ($category !== null) {
-            $qb->join('c.categories', 'k')
-                ->andwhere('k = :category')
-                ->setParameter('category', $category);
         }
 
         if ($composer !== null) {

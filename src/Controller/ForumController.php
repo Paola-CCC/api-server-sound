@@ -92,8 +92,7 @@ class ForumController extends AbstractController
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
 
         // dd($data['categoryId'] ,$data['subjectName']);
-
-        $forumList = $forumRepository->findByProgression($categoryId ,$subjectName);
+        $forumList = $forumRepository->findForumByCriteria($categoryId ,$subjectName);
 
         $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
     

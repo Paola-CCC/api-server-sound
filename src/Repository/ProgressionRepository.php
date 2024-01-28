@@ -109,7 +109,7 @@ class ProgressionRepository extends ServiceEntityRepository
     
 
         if ($status !== null) {
-            $qb->andWhere('p.status = :status')
+            $qb->where('p.status = :status')
                 ->setParameter('status', $status);
         }
 

@@ -148,7 +148,7 @@ class CourseController extends AbstractController
     }
 
 
-    #[Route('/courses/search', name: 'course_list_by_title', methods: ['POST'])]
+    #[Route('/courses-search', name: 'course_list_by_title', methods: ['POST'])]
     public function searchCourses (  Request $request, CourseRepository $courseRepository ,ManagerRegistry $doctrine,SerializerInterface $serializer): Response {
 
         $data = json_decode($request->getContent(),true);

@@ -98,8 +98,8 @@ class ProgressionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p');
     
         if ($user !== null) {
-            $qb->join('p.user', 'u')
-            ->andwhere('u = :user')
+            $qb->join('p.course', 'c')
+            ->andwhere('c.professor = :user')
             ->setParameter('user', $user);
         }
     

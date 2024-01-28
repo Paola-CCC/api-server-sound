@@ -109,7 +109,7 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria( ?User $user , ?Instrument $instrument , ?Composer $composer , string $title = '' ): array 
+    public function findByCriteriaBefore( ?User $user , ?Instrument $instrument , ?Composer $composer , string $title = '' ): array 
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -141,6 +141,76 @@ class CourseRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
+
+    public function findByCriteria(?User $user, ?Instrument $instrument, ?Composer $composer, string $title = ''): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        // Utilisez leftJoin pour les critères optionnels afin de ne pas exclure les résultats
+        if ($user !== null) {
+            $qb->leftJoin('c.professor', 'u')
+                ->andWhere('u = :user')
+                ->setParameter('user', $user);
+        }
+
+        if ($instrument !== null) {
+            $qb->leftJoin('c.instrument', 'i')
+                ->andWhere('i = :instrument')
+                ->setParameter('instrument', $instrument);
+        }
+
+        if ($composer !== null) {
+            $qb->leftJoin('c.composers', 'compo')
+                ->andWhere('compo = :composer')
+                ->setParameter('composer', $composer);
+        }
+
+        if ($title !== '') {
+            $qb->andWhere('c.title LIKE :title')
+                ->setParameter('title', $title . '%');
+        }
+
+        // Utilisez orderBy après avoir défini tous les critères
+        $qb->orderBy('c.id', 'DESC');
+
+        // Exécutez la requête et retournez les résultats
+        return $qb->getQuery()->getResult();
+    }
+
+
+    public function findAllCriteria(): array
+    {
+        return $this->createQueryBuilder('c')
+            // ->andWhere('c.title LIKE :title')
+            // ->setParameter('title', $title . '%')
+
+            ->leftJoin('c.professor', 'u')
+            ->andWhere('u = :user')
+            ->setParameter('user', 2)
+
+
+            // ->leftJoin('c.instrument', 'i')
+            // ->andWhere('i = :instrument')
+            // ->setParameter('instrument', $instrument)
+
+            // ->leftJoin('c.composers', 'compo')
+            // ->andWhere('compo = :composer')
+            // ->setParameter('composer', $composer)
+
+
+            ->leftJoin('c.instrument', 'i')
+            ->andWhere('i = :instrument')
+            ->setParameter('instrument', '')
+
+            ->leftJoin('c.composers', 'compo')
+            ->andWhere('compo = :composer')
+            ->setParameter('composer', '')
+
+            ->orderBy('c.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    /**
 //     * @return Course[] Returns an array of Course objects

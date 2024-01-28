@@ -127,10 +127,6 @@ class ProgressionController extends AbstractController
         $title = $data['title'] ?? null ;
         $status = $data['status'] ?? null ;
 
-        if($status ){
-           dd($status);
-        }
-
         $results = $progressionRepository->findByCriteria($user ,$title ,$status );
 
         if (!$results ) {

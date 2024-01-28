@@ -70,7 +70,7 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByCriteria( $subjectForum , $categoryId ): array
+    public function findForumByCriteria(string $subjectForum = 'f', $categoryId ): array
     {
         $qb = $this->createQueryBuilder('f');
 
@@ -80,11 +80,11 @@ class ForumRepository extends ServiceEntityRepository
                 ->setParameter('categoryID', $categoryId);
         }
         
-        if ($subjectForum !== null) {
+        if ($subjectForum !== '' ) {
             $qb ->andWhere('f.subject LIKE :subject')
                 ->setParameter('subject', $subjectForum . '%') ;
         }
-    
+        
         $qb->orderBy('f.id', 'DESC');
 
         return $qb->getQuery()->getResult();

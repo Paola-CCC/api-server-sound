@@ -104,20 +104,6 @@ class ProgressionController extends AbstractController
 
         $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
         return new JsonResponse($json, 200, [], true);
-
-        // if(empty($allProgression)){
-        //     $result[] = [
-        //         'user' => $studentsId
-        //     ];
-            
-        //     $json = $this->serializer->serialize($result, 'json', ['groups' => [ 'course', 'rating', 'course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
-        //     return new JsonResponse($json, 200, [], true);
-        // } else {
-
-        //     $json = $this->serializer->serialize($allProgression, 'json', ['groups' => [ 'course','course_professor', 'messages',  'progression' , 'course_composers','course_category','course_instruments'], 'datetime_format' => 'dd/MM/yyyy HH:mm']);
-        //     return new JsonResponse($json, 200, [], true);
-
-        // }
     }
 
 

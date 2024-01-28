@@ -83,6 +83,22 @@ class ForumController extends AbstractController
     }
 
 
+    #[Route('forums-subject/search', name: 'find_forums_criteria', methods: ['POST'])]
+    public function findBySubjectCriteria(ForumRepository $forumRepository , SerializerInterface $serializer ,Request $request): JsonResponse
+    {
+
+        $data = json_decode($request->getContent(),true);
+        $categoryId = !empty($data['categoryId']) ? $data['categoryId']: null;
+        $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
+
+        $forumList = $forumRepository->findByProgression($categoryId ,$subjectName);
+
+        $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
+    
+        return new JsonResponse($data, 200, [], true);
+    }
+
+
     #[Route('/forums/{forumId}', name: 'forum_by_id', methods: ['GET'])]
     public function getForumById(int $forumId, ForumRepository $forumRepository): JsonResponse
     {

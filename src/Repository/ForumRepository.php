@@ -70,6 +70,26 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByCriteria( $subjectForum , $categoryId ): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if ($categoryId !== null) {
+            $qb->join('f.category', 'c')
+                ->andWhere('c.id = :categoryID')
+                ->setParameter('categoryID', $categoryId);
+        }
+        
+        if ($subjectForum !== null) {
+            $qb ->andWhere('f.subject LIKE :subject')
+                ->setParameter('subject', $subjectForum . '%') ;
+        }
+    
+        $qb->orderBy('p.id', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Forum[] Returns an array of Forum objects
 //     */

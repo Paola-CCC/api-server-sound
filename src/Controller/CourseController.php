@@ -158,10 +158,10 @@ class CourseController extends AbstractController
         $composerId = $data['composerId'] ?? '';
         $title = $data['title'] ?? '';
 
-        $user = $userId !== '' ? $doctrine->getRepository(User::class)->find($userId) : null;
-        $instrument = $instrumentName !== '' ? $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) : null;
-        $category = $categoryId !== '' ? $doctrine->getRepository(Category::class)->find($categoryId) : null;
-        $composer = $composerId !== '' ? $doctrine->getRepository(Composer::class)->find($composerId) : null;
+        $user = $doctrine->getRepository(User::class)->find($userId);
+        $instrument = $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) ;
+        $category = $doctrine->getRepository(Category::class)->find($categoryId);
+        $composer = $doctrine->getRepository(Composer::class)->find($composerId);
 
         if (!$user) {
             return new JsonResponse(['message' => 'User not found'], 404);

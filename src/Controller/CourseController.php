@@ -157,18 +157,6 @@ class CourseController extends AbstractController
         $instrument = $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $data['instrumentName']]) ?? null ;
         $composer = $doctrine->getRepository(Composer::class)->find($data['composerId']) ?? null;
 
-        if (!$user) {
-            return new JsonResponse(['message' => 'User not found'], 404);
-        }
-
-        if (!$instrument) {
-            return new JsonResponse(['message' => 'instrument not found'], 404);
-        }
-
-        if (!$composer) {
-            return new JsonResponse(['message' => '$composer not found'], 404);
-        }
-
         $results = $courseRepository->findByCriteria($user, $instrument, $composer, $title);
 
         if (!$results ) {

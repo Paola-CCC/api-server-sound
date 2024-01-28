@@ -123,9 +123,9 @@ class ProgressionController extends AbstractController
     {
 
         $data = json_decode($request->getContent(),true);
-        $user = $data['professorId'] && $data['professorId'] !==  "" ? $data['professorId'] : null ;
-        $title = $data['title'] &&  $data['title'] !==  "" ? $data['title'] : null ;
-        $status = $data['status']&&  $data['status'] !==  "" ? $data['status'] : null ;
+        $user = $doctrine->getRepository(User::class)->find($data['professorId']) ;
+        $title = $data['title'] ?? null ;
+        $status = $data['status'] ??  null ;
 
         $results = $progressionRepository->findByCriteria($user,$title,$status);
 

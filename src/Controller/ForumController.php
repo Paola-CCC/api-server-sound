@@ -89,7 +89,7 @@ class ForumController extends AbstractController
     {
 
         $data = json_decode($request->getContent(), true);
-        $categoryId = isset($data['categoryId']) ? $data['categoryId'] : null;
+        $categoryId = !empty($data['categoryId']) ? $data['categoryId'] : null;
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
         
         $forumList = $forumRepository->findForumsByCriteria($categoryId, $subjectName);

@@ -21,7 +21,7 @@ use App\Repository\InstrumentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-
+use PHPUnit\Framework\Constraint\Count;
 
 class CourseController extends AbstractController
 {
@@ -152,19 +152,35 @@ class CourseController extends AbstractController
     public function searchCourses (  Request $request, CourseRepository $courseRepository ,ManagerRegistry $doctrine,SerializerInterface $serializer): Response {
 
         $data = json_decode($request->getContent(),true);
-        $user = $data['professorId'];
-        $instrumentName = $data['instrumentName'];
-        $category = $data['categoryId'];
-        $composer = $data['composerId'];
-        $title = $data['title'] ? $data['title']  : '';
+        $user = $data['professorId'] ?? '';
+        $instrumentName = $data['instrumentName'] ?? '';
+        $category = $data['categoryId'] ?? '';
+        $composer = $data['composerId'] ?? '';
+        $title = $data['title'] ?? '';
 
-        $user = $user ? $doctrine->getRepository(User::class)->find($user) : null;
-        $instrument = $instrumentName ? $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) : null;
-        $category = $category ? $doctrine->getRepository(Category::class)->find($category) : null;
-        $composer = $composer ? $doctrine->getRepository(Composer::class)->find($composer) : null;
-        
+        $user = $user !== '' ? $doctrine->getRepository(User::class)->find($user) : null;
+        $instrument = $instrumentName !== '' ? $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) : null;
+        $category = $category !== '' ? $doctrine->getRepository(Category::class)->find($category) : null;
+        $composer = $composer !== '' ? $doctrine->getRepository(Composer::class)->find($composer) : null;
+
+        if (!$user) {
+            return new JsonResponse(['message' => 'User not found'], 404);
+        }
+
+        if (!$instrument) {
+            return new JsonResponse(['message' => 'instrument not found'], 404);
+        }
+
+        if (!$category) {
+            return new JsonResponse(['message' => 'Category not found'], 404);
+        }
+
+        if (!$composer) {
+            return new JsonResponse(['message' => 'Category not found'], 404);
+        }
+
         $results = $courseRepository->findByCriteria($user, $instrument, $category, $composer, $title);
-
+        
         if (!$results ) {
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);
         }

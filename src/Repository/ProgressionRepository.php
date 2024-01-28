@@ -97,6 +97,11 @@ class ProgressionRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('p');
     
+        if ($status !== null) {
+            $qb->where('p.status = :status')
+                ->setParameter('status', $status );
+        }
+
         if ($user !== null) {
             $qb->join('p.course', 'c')
             ->andwhere('c.professor = :user')
@@ -107,13 +112,6 @@ class ProgressionRepository extends ServiceEntityRepository
             }
         }
     
-
-        if ($status !== null) {
-            $qb->where('p.status = :status')
-                ->setParameter('status', $status . '%');
-
-        }
-
         $qb->orderBy('p.id', 'DESC');
 
         return $qb->getQuery()->getResult();

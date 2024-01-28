@@ -85,7 +85,7 @@ class ForumRepository extends ServiceEntityRepository
                 ->setParameter('subject', $subjectForum . '%') ;
         }
     
-        $qb->orderBy('p.id', 'DESC');
+        $qb->orderBy('f.id', 'DESC');
 
         return $qb->getQuery()->getResult();
     }

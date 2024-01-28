@@ -88,12 +88,11 @@ class ForumController extends AbstractController
     public function findBySubjectCriteria(ForumRepository $forumRepository , SerializerInterface $serializer ,Request $request , CategoryRepository $categoryRepository): JsonResponse
     {
 
-        $data = json_decode($request->getContent(),true);
-        $category = $categoryRepository->find($data['categoryId']);
+        $data = json_decode($request->getContent(), true);
+        $categoryId = isset($data['categoryId']) ? $data['categoryId'] : null;
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
         
-        dd( '$categoryId : ' , $category,  '$subjectName : ', $subjectName);
-        $forumList = $forumRepository->findForumByCriteria($category ,$subjectName);
+        $forumList = $forumRepository->findForumsByCriteria($categoryId, $subjectName);
 
         $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
     

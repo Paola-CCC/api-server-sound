@@ -71,25 +71,25 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findForumByCriteria( ?Composer $categoryId ,string $subjectForum = '' ): array
+    public function findForumsByCriteria($categoryId, $subjectName)
     {
-        $qb = $this->createQueryBuilder('f');
+        $qb = $this->createQueryBuilder('f')
+            ->leftJoin('f.category', 'c');
 
         if ($categoryId !== null) {
-            $qb->leftJoin('f.category', 'c')
-                ->andWhere('c = :categoryID')
-                ->setParameter('categoryID', $categoryId);
+            $qb->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
         }
-/*        
-        if ($subjectForum !== null ) {
-            $qb ->andWhere('f.subject LIKE :subject')
-                ->setParameter('subject', $subjectForum . '%') ;
-        }*/
-        
-        $qb->orderBy('f.id', 'DESC');
+
+        if ($subjectName !== null && $subjectName !== '') {
+            $qb->andWhere('f.subject LIKE :subjectName')
+                ->setParameter('subjectName', '%' . $subjectName . '%');
+        }
+
+        $qb->orderBy('f.subject', 'ASC')
+            ->addOrderBy('c.name', 'ASC');
 
         return $qb->getQuery()->getResult();
-    
     }
 
 

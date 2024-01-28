@@ -126,7 +126,7 @@ class ProgressionController extends AbstractController
         $user = $doctrine->getRepository(User::class)->find($data['professorId']) ;
         $title = $data['title'] ?? null ;
 
-        $results = $progressionRepository->findByCriteria($user);
+        $results = $progressionRepository->findByCriteria($user ,$title);
 
         if (!$results ) {
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);

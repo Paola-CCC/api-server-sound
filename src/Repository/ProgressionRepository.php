@@ -93,7 +93,7 @@ class ProgressionRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria(?User $user , $title = ''): array
+    public function findByCriteria(?User $user , $title , $status): array
     {
         $qb = $this->createQueryBuilder('p');
     
@@ -108,10 +108,10 @@ class ProgressionRepository extends ServiceEntityRepository
         }
     
 
-        // if ($status !== null) {
-        //     $qb->andWhere('p.status = :status')
-        //         ->setParameter('status', $status);
-        // }
+        if ($status !== null) {
+            $qb->andWhere('p.status = :status')
+                ->setParameter('status', $status);
+        }
 
         $qb->orderBy('p.id', 'DESC');
 

@@ -95,16 +95,15 @@ class ProgressionRepository extends ServiceEntityRepository
 
     public function findByCriteria(?User $user , $title , $status): array
     {
-        $qb = $this->createQueryBuilder('p');
-
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.course', 'c');
 
         if ($user !== null ) {
-            $qb->join('p.course', 'c')
-            ->andwhere('c.professor = :user')
-            ->setParameter('user', $user);
+            $qb->andwhere('c.professor = :user')
+                ->setParameter('user', $user);
         }
 
-        if ( $title !== null) {
+        if ($title !== null && $title !== '') {
             $qb->andWhere('c.title LIKE :courseTitle')
                 ->setParameter('courseTitle', $title . '%');
         }

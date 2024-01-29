@@ -165,9 +165,9 @@ class CourseRepository extends ServiceEntityRepository
                 ->setParameter('composer', $composer);
         }
 
-        if ($title !== null) {
-            $qb->andWhere('c.title LIKE :title')
-                ->setParameter('title', $title . '%');
+        if ($title !== null && $title !== '') {
+            $qb->andWhere('c.title LIKE :courseTitle')
+                ->setParameter('courseTitle', $title . '%');
         }
 
         // Utilisez orderBy après avoir défini tous les critères

@@ -89,13 +89,10 @@ class ForumController extends AbstractController
     {
 
         $data = json_decode($request->getContent(), true);
-        // $categoryId = !empty($data['categoryId']) ? $data['categoryId'] : null;
+        $categoryId = !empty($data['categoryId']) ? $data['categoryId'] : null;
         $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
 
-        
-        $category = $categoryRepository->find($data['instrumentId']);
-        
-        $forumList = $forumRepository->findForumsByCriteria($category, $subjectName);
+        $forumList = $forumRepository->findForumsByCriteria($categoryId, $subjectName);
 
         $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
     

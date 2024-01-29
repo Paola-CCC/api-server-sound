@@ -72,36 +72,14 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // public function findForumsByCriteria($categoryId, $subjectName)
-    // {
-    //     $qb = $this->createQueryBuilder('f')
-    //         ->leftJoin('f.category', 'c');
-
-    //     if ($categoryId !== null) {
-    //         $qb->andWhere('c.id = :categoryId')
-    //             ->setParameter('categoryId', $categoryId);
-    //     }
-
-    //     if ($subjectName !== null && $subjectName !== '') {
-    //         $qb->andWhere('f.subject LIKE :subjectName')
-    //             ->setParameter('subjectName', '%' . $subjectName . '%');
-    //     }
-
-    //     $qb->orderBy('f.subject', 'ASC')
-    //         ->addOrderBy('c.name', 'ASC');
-
-    //     return $qb->getQuery()->getResult();
-    // }
-
-
-    public function findForumsByCriteria(?Category $category, $subjectName)
+    public function findForumsByCriteria($categoryId, $subjectName)
     {
         $qb = $this->createQueryBuilder('f')
             ->leftJoin('f.category', 'c');
 
-        if ($category !== null) {
-            $qb->andWhere('c = :category')
-                ->setParameter('category', $category);
+        if ($categoryId !== null) {
+            $qb->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
         }
 
         if ($subjectName !== null && $subjectName !== '') {
@@ -114,6 +92,7 @@ class ForumRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
 
 
 //    /**

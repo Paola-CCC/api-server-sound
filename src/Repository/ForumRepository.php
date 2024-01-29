@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Composer;
 use App\Entity\Forum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -71,14 +72,36 @@ class ForumRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findForumsByCriteria($categoryId, $subjectName)
+    // public function findForumsByCriteria($categoryId, $subjectName)
+    // {
+    //     $qb = $this->createQueryBuilder('f')
+    //         ->leftJoin('f.category', 'c');
+
+    //     if ($categoryId !== null) {
+    //         $qb->andWhere('c.id = :categoryId')
+    //             ->setParameter('categoryId', $categoryId);
+    //     }
+
+    //     if ($subjectName !== null && $subjectName !== '') {
+    //         $qb->andWhere('f.subject LIKE :subjectName')
+    //             ->setParameter('subjectName', '%' . $subjectName . '%');
+    //     }
+
+    //     $qb->orderBy('f.subject', 'ASC')
+    //         ->addOrderBy('c.name', 'ASC');
+
+    //     return $qb->getQuery()->getResult();
+    // }
+
+
+    public function findForumsByCriteria(?Category $category, $subjectName)
     {
         $qb = $this->createQueryBuilder('f')
             ->leftJoin('f.category', 'c');
 
-        if ($categoryId !== null) {
-            $qb->andWhere('c.id = :categoryId')
-                ->setParameter('categoryId', $categoryId);
+        if ($category !== null) {
+            $qb->andWhere('c = :category')
+                ->setParameter('category', $category);
         }
 
         if ($subjectName !== null && $subjectName !== '') {

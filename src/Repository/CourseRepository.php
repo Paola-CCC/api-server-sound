@@ -153,7 +153,7 @@ class CourseRepository extends ServiceEntityRepository
         }
 
         if ($instrument !== null) {
-            $qb->leftJoin('c.instrument' ,'instrument')
+            $qb->leftJoin('c.instrument' ,'i')
                 ->andWhere('i = :instrument')
                 ->setParameter('instrument', $instrument);
         }
@@ -169,10 +169,8 @@ class CourseRepository extends ServiceEntityRepository
                 ->setParameter('courseTitle', $title . '%');
         }
 
-        // Utilisez orderBy après avoir défini tous les critères
         $qb->orderBy('c.id', 'DESC');
 
-        // Exécutez la requête et retournez les résultats
         return $qb->getQuery()->getResult();
     }
 

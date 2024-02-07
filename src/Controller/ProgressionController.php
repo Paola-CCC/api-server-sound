@@ -119,7 +119,7 @@ class ProgressionController extends AbstractController
         $results = $progressionRepository->findByCriteria($user ,$title ,$status );
 
         if (!$results ) {
-            return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);
+            return new JsonResponse(['message' => 'Aucun suivi de cours pour ces critères'], 404);
         }
      
         $serializedCourses = $serializer->serialize($results, 'json', ['groups' => ['course','rating', 'course_professor', 'course_category', 'category', 'course_composers' , 'course_composers' ,'course_instruments' , 'instrument']]);

@@ -148,13 +148,12 @@ class CourseRepository extends ServiceEntityRepository
 
         // Utilisez leftJoin pour les critères optionnels afin de ne pas exclure les résultats
         if ($user !== null) {
-            $qb->leftJoin('c.professor', 'u')
-                ->andWhere('u = :user')
+            $qb->andwhere('c.professor = :user')
                 ->setParameter('user', $user);
         }
 
         if ($instrument !== null) {
-            $qb->leftJoin('c.instrument', 'i')
+            $qb->leftJoin('c.instrument' ,'instrument')
                 ->andWhere('i = :instrument')
                 ->setParameter('instrument', $instrument);
         }

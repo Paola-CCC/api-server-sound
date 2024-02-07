@@ -157,7 +157,6 @@ class CourseController extends AbstractController
         $instrument = $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $data['instrumentName']]);
         $composer = $doctrine->getRepository(Composer::class)->find($data['composerId']);
 
-
         $results = $courseRepository->findByCriteria($user, $instrument, $composer, $title);
 
         if (!$results ) {

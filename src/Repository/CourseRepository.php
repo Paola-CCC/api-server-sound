@@ -142,7 +142,7 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria(?User $user, ?Instrument $instrument, ?Composer $composer, string $title = ''): array
+    public function findByCriteria(?User $user, ?Instrument $instrument, ?Composer $composer, $title = ''): array
     {
         $qb = $this->createQueryBuilder('c');
 

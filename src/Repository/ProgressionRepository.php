@@ -93,32 +93,31 @@ class ProgressionRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria($user, $title, $status): array
+    public function findByCriteria(?User $user , $title , $status): array
     {
-        $qb = $this->createQueryBuilder('p');
-    
-        if ($user !== null) {
-            $qb->join('p.user', 'u')
-               ->andWhere('u.id = :user')
-               ->setParameter('user', $user);
-        }
-    
-        if ($title !== null) {
-            $qb->join('p.course', 'c')
-               ->andWhere('c.title LIKE :courseTitle')
-               ->setParameter('courseTitle', $title . '%');
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.course', 'c');
+
+        if ($user !== null ) {
+            $qb->andwhere('c.professor = :user')
+                ->setParameter('user', $user);
         }
 
+        if ($title !== null && $title !== '') {
+            $qb->andWhere('c.title LIKE :courseTitle')
+                ->setParameter('courseTitle', $title . '%');
+        }
+        
         if ($status !== null) {
             $qb->andWhere('p.status = :status')
-                ->setParameter('status', $status);
+                ->setParameter('status', $status );
         }
     
-        return $qb->orderBy('p.id', 'DESC')
-                  ->getQuery()
-                  ->getResult();
-    }
+        $qb->orderBy('p.id', 'DESC');
 
+        return $qb->getQuery()->getResult();
+    
+    }
 
 //    /**
 //     * @return Progression[] Returns an array of Progression objects

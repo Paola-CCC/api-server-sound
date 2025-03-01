@@ -103,7 +103,7 @@ class UserController extends AbstractController
     }
 
     #[Route('user/{id}/edit', name: 'app_user_edit', methods: ['PUT'])]
-    public function edit(int $id, Request $request)
+    public function edit(int $id, Request $request): Response
     {
         $user = $this->doctrine->getRepository(User::class)->find($id);
 
@@ -117,33 +117,27 @@ class UserController extends AbstractController
             $user->setFirstName($data['firstName']);
             $user->setLastName($data['lastName']);
             $user->setEmail($data['email']);
-            
-        }    
-       if($data['roles'] != ""  &&  $data['roles']  === "ROLE_PROFESSOR" ){
-            $user->setBiography($data['biography']);
+        }  
 
+        if($data['roles'] != ""  &&  $data['roles']  === "ROLE_PROFESSOR" ){
+            $user->setBiography($data['biography']);
         }
         
-        $idInstrument = null;
 
-            foreach ($data['instruments'] as $instrumentId) {
-              
-
-                $instrument = $this->entityManager->getRepository(Instrument::class)->find($instrumentId);
-                
-
-                if (!$instrument) {
-                    return new JsonResponse(['message' => 'Instrument not found'], 404);
-                };
-                $user->addInstrument($instrument);
-            }
+        foreach ($data['instruments'] as $instrumentId) {
+            $instrument = $this->entityManager->getRepository(Instrument::class)->find($instrumentId);
+            
+            if (!$instrument) {
+                return new JsonResponse(['message' => 'Instrument not found'], 404);
+            };
+            $user->addInstrument($instrument);
+        }
             
 
-       foreach ($user->getInstruments() as $instrument){
-           
-                if(!in_array($instrument->getId(), $data['instruments'])){
-                    $user->removeInstrument($instrument);
-                }
+       foreach ($user->getInstruments() as $instrument){ 
+            if(!in_array($instrument->getId(), $data['instruments'])){
+                $user->removeInstrument($instrument);
+            }
        }
 
         if(isset($data['subscription'])){

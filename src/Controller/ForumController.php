@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Forum;
 use App\Entity\User;
 use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,6 +79,22 @@ class ForumController extends AbstractController
         }
 
         $data = $serializer->serialize($forumWithCategory, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
+    
+        return new JsonResponse($data, 200, [], true);
+    }
+
+
+    #[Route('forums-subject/search', name: 'find_forums_criteria', methods: ['POST'])]
+    public function findBySubjectCriteria(ForumRepository $forumRepository , SerializerInterface $serializer ,Request $request , CategoryRepository $categoryRepository): JsonResponse
+    {
+
+        $data = json_decode($request->getContent(), true);
+        $categoryId = !empty($data['categoryId']) ? $data['categoryId'] : null;
+        $subjectName = !empty($data['subjectName']) ? $data['subjectName'] : null;
+
+        $forumList = $forumRepository->findForumsByCriteria($categoryId, $subjectName);
+
+        $data = $serializer->serialize($forumList, 'json', ['groups' => ['forum','forum_user_id', 'forum_answers_count','category', 'user_forum_like', 'likes_forum_count', 'dislikes_forum_count']]);
     
         return new JsonResponse($data, 200, [], true);
     }

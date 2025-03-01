@@ -61,23 +61,30 @@ class RatingController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $courseId = $data['course']['id'];
+        $courseId = $data['courseId'];
         $course = $this->entityManager->getRepository(Course::class)->find($courseId);
+        $user = $this->entityManager->getRepository(User::class)->find($data['userId']);
+        
         if (!$course) {
             return new Response("Course not found", 404);
         }
-        $ratingValue = $data['value'];
-        $rating = new Rating();
-        $rating->setCourse($course);
-        $rating->setValue($ratingValue);
-        //Voir pour l'utilisateur
-        // dd($this->getUser());
-        // $rating->setUser($this->getUser());
-        $userId = $data['user']['id'];
-        $user = $this->entityManager->getRepository(User::class)->find($userId);
+
         if (!$user) {
             return new Response("User not found", 404);
-        };
+        }
+
+        $review = $this->entityManager->getRepository(User::class)->findby([
+            'user' =>  $data['userId'],
+            'course' => $data['courseId']
+        ]);
+
+        if ($review) {
+            return new Response("Attention! Cet utilisateur a déjà donné son avis sur ce cours", 404);
+        }
+
+        $rating = new Rating();
+        $rating->setCourse($course);
+        $rating->setValue($data['valueRating']);
         $rating->setUser($user);
         $this->entityManager->persist($rating);
         $this->entityManager->flush();

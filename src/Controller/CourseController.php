@@ -21,7 +21,7 @@ use App\Repository\InstrumentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-
+use PHPUnit\Framework\Constraint\Count;
 
 class CourseController extends AbstractController
 {
@@ -148,22 +148,16 @@ class CourseController extends AbstractController
     }
 
 
-    #[Route('/courses/search', name: 'course_list_by_title', methods: ['POST'])]
+    #[Route('/courses/search', name: 'courses_list_search', methods: ['POST'])]
     public function searchCourses (  Request $request, CourseRepository $courseRepository ,ManagerRegistry $doctrine,SerializerInterface $serializer): Response {
 
         $data = json_decode($request->getContent(),true);
-        $user = $data['professorId'];
-        $instrumentName = $data['instrumentName'];
-        $category = $data['categoryId'];
-        $composer = $data['composerId'];
-        $title = $data['title'] ? $data['title']  : '';
+        $title = !empty($data['title']) ? $data['title']: null;
+        $user = $doctrine->getRepository(User::class)->find($data['professorId']) ;
+        $instrument = $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $data['instrumentName']]);
+        $composer = $doctrine->getRepository(Composer::class)->find($data['composerId']);
 
-        $user = $user ? $doctrine->getRepository(User::class)->find($user) : null;
-        $instrument = $instrumentName ? $doctrine->getRepository(Instrument::class)->findOneBy(['name' => $instrumentName]) : null;
-        $category = $category ? $doctrine->getRepository(Category::class)->find($category) : null;
-        $composer = $composer ? $doctrine->getRepository(Composer::class)->find($composer) : null;
-        
-        $results = $courseRepository->findByCriteria($user, $instrument, $category, $composer, $title);
+        $results = $courseRepository->findByCriteria($user, $instrument, $composer, $title);
 
         if (!$results ) {
             return new JsonResponse(['message' => 'Aucun cours pour ces critères'], 404);

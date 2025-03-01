@@ -20,7 +20,6 @@ class Rating
 
     #[ORM\ManyToOne(inversedBy: 'ratings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['rating'])]
     private ?Course $course = null;
 
     #[ORM\ManyToOne(inversedBy: 'ratingsUsers')]

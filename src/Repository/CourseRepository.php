@@ -109,7 +109,7 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCriteria( ?User $user , ?Instrument $instrument , ?Category $category, ?Composer $composer , string $title = '' ): array 
+    public function findByCriteriaBefore( ?User $user , ?Instrument $instrument , ?Composer $composer , string $title = '' ): array 
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -123,12 +123,6 @@ class CourseRepository extends ServiceEntityRepository
             $qb->join('c.instrument', 'i')
                 ->andwhere('i = :instrument')
                 ->setParameter('instrument', $instrument);
-        }
-
-        if ($category !== null) {
-            $qb->join('c.categories', 'k')
-                ->andwhere('k = :category')
-                ->setParameter('category', $category);
         }
 
         if ($composer !== null) {
@@ -146,6 +140,40 @@ class CourseRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
     }
+
+
+    public function findByCriteria(?User $user, ?Instrument $instrument, ?Composer $composer, $title = ''): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        // Utilisez leftJoin pour les critères optionnels afin de ne pas exclure les résultats
+        if ($user !== null) {
+            $qb->andwhere('c.professor = :user')
+                ->setParameter('user', $user);
+        }
+
+        if ($instrument !== null) {
+            $qb->leftJoin('c.instrument' ,'i')
+                ->andWhere('i = :instrument')
+                ->setParameter('instrument', $instrument);
+        }
+
+        if ($composer !== null) {
+            $qb->leftJoin('c.composers', 'compo')
+                ->andWhere('compo = :composer')
+                ->setParameter('composer', $composer);
+        }
+
+        if ($title !== null && $title !== '') {
+            $qb->andWhere('c.title LIKE :courseTitle')
+                ->setParameter('courseTitle', $title . '%');
+        }
+
+        $qb->orderBy('c.id', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 
 //    /**

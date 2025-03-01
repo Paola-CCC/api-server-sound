@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
+use App\Entity\Composer;
 use App\Entity\Forum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -69,6 +71,29 @@ class ForumRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findForumsByCriteria($categoryId, $subjectName)
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->leftJoin('f.category', 'c');
+
+        if ($categoryId !== null) {
+            $qb->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
+
+        if ($subjectName !== null && $subjectName !== '') {
+            $qb->andWhere('f.subject LIKE :subjectName')
+                ->setParameter('subjectName', '%' . $subjectName . '%');
+        }
+
+        $qb->orderBy('f.subject', 'ASC')
+            ->addOrderBy('c.name', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+
 
 //    /**
 //     * @return Forum[] Returns an array of Forum objects

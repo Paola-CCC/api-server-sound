@@ -117,35 +117,28 @@ class UserController extends AbstractController
             $user->setFirstName($data['firstName']);
             $user->setLastName($data['lastName']);
             $user->setEmail($data['email']);
-            $user->setBiography($data['biography']);
+        }  
 
-            if($data['role'] != ""){
-                $role = $data['role'];
-                if ($role == 'admin') {
-                    $user->setRoles(['ROLE_ADMIN']);
-                } elseif ($role == 'professor') {
-                    $user->setRoles(['ROLE_PROFESSOR']);
-                } else {
-                    $user->setRoles(['ROLE_USER']);
-                }
-            }
-    
-            $instruments = $data['instruments'];
-    
-            foreach ($instruments as $instrumentName) {
-                $instrument = $this->entityManager->getRepository(Instrument::class)->findOneBy(['id' => $instrumentName]);
-                if (!$instrument) {
-                    return new JsonResponse(['message' => 'Instrument not found'], 404);
-                };
-                $user->addInstrument($instrument);
-            }
-    
-            foreach ($user->getInstruments() as $instrument){
-                if(!in_array($instrument->getName(), $instruments)){
-                    $user->removeInstrument($instrument);
-                }
-            }
+        if($data['roles'] != ""  &&  $data['roles']  === "ROLE_PROFESSOR" ){
+            $user->setBiography($data['biography']);
         }
+        
+
+        foreach ($data['instruments'] as $instrumentId) {
+            $instrument = $this->entityManager->getRepository(Instrument::class)->find($instrumentId);
+            
+            if (!$instrument) {
+                return new JsonResponse(['message' => 'Instrument not found'], 404);
+            };
+            $user->addInstrument($instrument);
+        }
+            
+
+       foreach ($user->getInstruments() as $instrument){ 
+            if(!in_array($instrument->getId(), $data['instruments'])){
+                $user->removeInstrument($instrument);
+            }
+       }
 
         if(isset($data['subscription'])){
             $subscriptionId = $data['subscription']['id'];

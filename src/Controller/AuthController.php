@@ -72,6 +72,8 @@ class AuthController extends AbstractController
             $user->setRoles(['ROLE_SUPER_ADMIN']);
         } elseif ( $roles && $roles === 'ROLE_PROFESSOR') {
             $user->setRoles(['ROLE_PROFESSOR']);
+            $user->setBiography($data['biography']);
+
         } else {
             $user->setRoles(['ROLE_USER']);
         };
